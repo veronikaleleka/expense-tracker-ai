@@ -2,3 +2,9 @@
 *.jpeg
 *.png
 uploads/
+.venv/
+db.sqlite3
+.env
+__pycache__/
+.idea/
+media/
