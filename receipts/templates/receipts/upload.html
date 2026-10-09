@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload receipt</title>
+</head>
+<body>
+    <h1>Upload receipt</h1>
+
+    <form method = "post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+         <button type="submit">Upload</button>
+    </form>
+
+    {% if result %}
+        <p>File hash: {{ result.hash }}</p>
+        {% if result.duplicate %}
+            <p>This receipt was already uploaded.</p>
+        {% else %}
+            <p>New receipt.</p>
+        {% endif %}
+    {% endif %}
+</body>
+</html>
