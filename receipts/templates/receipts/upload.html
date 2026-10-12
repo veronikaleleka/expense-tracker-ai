@@ -12,13 +12,31 @@
          <button type="submit">Upload</button>
     </form>
 
-    {% if result %}
-        <p>File hash: {{ result.hash }}</p>
-        {% if result.duplicate %}
-            <p>This receipt was already uploaded.</p>
-        {% else %}
-            <p>New receipt.</p>
+  {% if error %}
+        <p>{{ error }}</p>
+    {% endif %}
+
+    {% if duplicate %}
+        <p>This receipt was already uploaded.</p>
+    {% endif %}
+
+ {% if receipt %}
+        <h2>{{ receipt.store_name }} ({{ receipt.date }})</h2>
+        <p>Total: {{ receipt.total_amount }}</p>
+        {% if warning %}
+            <p>Warning: {{ warning }}</p>
         {% endif %}
+        <table border="1" cellpadding="6">
+            <tr><th>Item</th><th>Qty</th><th>Price</th><th>Category</th></tr>
+            {% for item in receipt.items.all %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.price }}</td>
+                <td>{{ item.get_category_display }}</td>
+            </tr>
+            {% endfor %}
+        </table>
     {% endif %}
 </body>
 </html>
