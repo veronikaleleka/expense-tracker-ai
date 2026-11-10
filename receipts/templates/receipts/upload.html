@@ -21,7 +21,7 @@
     {% endif %}
 
  {% if receipt %}
-        <h2>{{ receipt.store_name }} ({{ receipt.date }})</h2>
+        <h2>{{ receipt.store_name }} ({{ receipt.date|date:"Y-m-d" }})</h2>
         <p>Total: {{ receipt.total_amount }}</p>
         {% if warning %}
             <p>Warning: {{ warning }}</p>

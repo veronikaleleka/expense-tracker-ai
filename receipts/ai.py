@@ -11,16 +11,25 @@ load_dotenv()
 
 SYSTEM_PROMPT = (
     "You are a receipt parser. Read the receipt photo and reply with a JSON object "
-    "with these keys: store_name (string), date (YYYY-MM-DD), total_amount "
-    "(number, the final amount paid), items (list). Each item has: name (string, as "
-    "printed on the receipt), price (number, price of ONE unit), quantity (integer, "
-    "default 1), category (one of: food, drinks, hygiene, household, health, "
-    "clothing, electric, other). Bottle deposit lines use category other. A discount "
-    "line is an item with a negative price and category other. Do not include tax "
-    "lines as items. Use a dot as the decimal separator"
+    "with these keys: store_name (string), date (YYYY-MM-DD, or null if no date is "
+    "clearly visible in the photo), total_amount (number, the final amount paid), "
+    "items (list). Each item has: name (string, as printed on the receipt), price "
+    "(number, price of ONE unit), quantity (integer, default 1), category (one of: "
+    "food, drinks, hygiene, household, health, clothing, electric, other). "
+    "Never guess or invent a value that is not visible on the receipt. "
+    "Discount, return and deposit lines use category other. Do not include tax "
+    "lines as items. Use a dot as the decimal separator. "
     "Copy store and item names exactly as printed, keeping all Lithuanian "
     "letters (ą, č, ę, ė, į, š, ų, ū, ž) and never replacing them with plain "
-    "ASCII letters."
+    "ASCII letters. "
+    "Keep the sign of every amount exactly as printed: a minus sign means a "
+    "negative price. Include each discount, return, cancelled line and deposit "
+    "voucher once, as an item with its printed sign. Do not include summary "
+    "lines that only repeat or add up discounts already listed, such as total "
+    "savings or benefit received. Payment methods such as card or cash are not "
+    "items. The items multiplied by quantity should add up to total_amount; "
+    "recheck the receipt if they do not, but never invent or duplicate lines. "
+    "Ignore loyalty points and bonus lines."
 )
 
 def extract_receipt(content):
@@ -35,7 +44,8 @@ def extract_receipt(content):
     encoded = base64.b64encode(buffer.getvalue()).decode('utf-8')
 
     response = client.chat.completions.create(
-        model='gpt-4o-mini',
+        model='gpt-4o',
+        temperature=0,
         response_format={'type': 'json_object'},
         messages=[
             {'role': 'system', 'content': SYSTEM_PROMPT},
