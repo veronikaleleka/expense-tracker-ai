@@ -3,7 +3,15 @@
 A web application built with Python and Django that extracts itemized data from receipt photos, categorizes each item and checks that the items add up to the receipt total. It uses a vision-capable OpenAI model to read the receipts.
 
 ## Screenshots
-<img width="393" height="499" alt="Screenshot 2026-11-19 at 10 42 49" src="https://github.com/user-attachments/assets/88d4d72e-7f71-4b39-9a53-05de58c454aa" />
+
+### Receipt extraction (Lidl)
+![Lidl receipt extraction](lidl-receipt.png)
+
+### Missing date and total mismatch warnings (Maxima)
+![Maxima receipt warnings](maxima-warning.png)
+
+### Editing saved receipt and items in Django Admin
+![Django Admin receipt edit view](admin-receipt.png)
 
 ## How It Works
 1. **Upload:** The user uploads a receipt photo through the Django web interface.
